@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: web-deployment
   namespace: web
-  labels:
-    app: hello
 spec:
   # deployment will take care of any pod matchingLabels app-hello
   selector:

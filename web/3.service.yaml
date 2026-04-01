@@ -4,8 +4,6 @@ kind: Service
 metadata:
   name: svc-web
   namespace: web
-  labels:
-    app: hello
 spec:
   # When traffic hits this Service it checks selector to which Pod to route the traffic
   selector:
