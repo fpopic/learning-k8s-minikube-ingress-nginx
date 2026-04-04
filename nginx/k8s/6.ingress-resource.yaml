@@ -3,11 +3,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: learning-ingress
-  namespace: learning
+  namespace: learning-nginx
 spec:
   ingressClassName: nginx
   rules:
-    - host: my-learning.com
+    - host: localhost
       http:
         paths:
           - path: /api
@@ -16,6 +16,7 @@ spec:
               service:
                 name: svc-api
                 port:
+                  # Match service port defined in 5.api-service.yaml
                   number: 80
           - path: /
             pathType: Prefix
@@ -23,4 +24,5 @@ spec:
               service:
                 name: svc-ui
                 port:
-                  number: 30123
+                  # Match service port defined in 3.ui-service.yaml
+                  number: 80

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-deployment
+  namespace: learning
+spec:
+  # deployment will take care of any pod matchingLabels app-ui
+  selector:
+    matchLabels:
+      app: ui
+  # pod template
+  template:
+    metadata:
+      # required: define label for pod (used by higher k8s objects: Service, Deployment)
+      labels:
+        app: ui
+    spec:
+      containers:
+        - name: ui-container
+          image: hello-ui:latest
+          # Colima uses the local Docker daemon, so the cluster can find the image.
+          imagePullPolicy: Never
+          ports:
+            # Standard Nginx HTTP port
+            - name: ui-port
+              containerPort: 80

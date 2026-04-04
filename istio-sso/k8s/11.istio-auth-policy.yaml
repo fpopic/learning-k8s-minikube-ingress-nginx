@@ -1,0 +1,22 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: external-auth
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway # standard for istioctl demo profile
+  action: CUSTOM
+  provider:
+    name: oauth2-proxy
+  rules:
+  - to:
+    - operation:
+        # Exclude Keycloak and oauth2-proxy from authentication
+        notPaths: 
+        - /auth
+        - /auth/*
+        - /oauth2
+        - /oauth2/*
+        - /favicon.ico

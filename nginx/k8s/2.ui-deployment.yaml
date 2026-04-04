@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ui-deployment
-  namespace: learning
+  namespace: learning-nginx
 spec:
   # deployment will take care of any pod matchingLabels app-ui
   selector:
@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: ui-container
-          image: nginx
+          image: hello-ui:latest
+          imagePullPolicy: Never
           ports:
             # https://stackoverflow.com/a/65270688/2122990
             - name: ui-port

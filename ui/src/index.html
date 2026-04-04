@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Lab Dashboard</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .user-badge { display: inline-block; padding: 0.25rem 0.75rem; background: #dbeafe; color: #1e40af; border-radius: 999px; font-weight: 600; font-size: 0.875rem; }
+        button { background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        pre { background: #f1f5f9; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.875rem; }
+        .nav { display: flex; gap: 1rem; margin-top: 1rem; }
+        .nav a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Learning Lab Dashboard</h1>
+    
+    <div class="card">
+        <h3>👤 Current User</h3>
+        <div id="user-info">Loading session info...</div>
+        <div class="nav">
+            <a href="/api/docs" target="_blank">📚 Swagger API Docs</a>
+            <a href="/api/me" target="_blank">🔍 Raw Headers</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>🛠️ API Actions</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <button onclick="fetchData('/api/users')">Get Users</button>
+            <button onclick="fetchData('/api/payments')">Get Payments</button>
+        </div>
+        <pre id="api-output">Click a button to fetch data...</pre>
+    </div>
+
+    <script>
+        async function fetchUser() {
+            try {
+                const res = await fetch('/api/me');
+                const data = await res.json();
+                const user = data.headers['x-auth-request-user'] || 'Anonymous';
+                const email = data.headers['x-auth-request-email'] || 'N/A';
+                document.getElementById('user-info').innerHTML = `
+                    Logged in as: <span class="user-badge">${user}</span><br/>
+                    <small style="color: #64748b">Email: ${email}</small>
+                `;
+            } catch (e) {
+                document.getElementById('user-info').innerText = 'Backend unreachable or unauthenticated.';
+            }
+        }
+
+        async function fetchData(url) {
+            const out = document.getElementById('api-output');
+            out.innerText = 'Fetching...';
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                out.innerText = JSON.stringify(data, null, 2);
+            } catch (e) {
+                out.innerText = 'Error: ' + e.message;
+            }
+        }
+
+        fetchUser();
+    </script>
+</body>
+</html>

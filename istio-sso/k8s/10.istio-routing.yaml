@@ -1,0 +1,68 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: learning-gateway
+  namespace: learning
+spec:
+  selector:
+    istio: ingressgateway # standard for istioctl demo profile
+  servers:
+  - port:
+      # Port 81 is used to avoid conflict with standard HTTP (80) and Nginx Ingress (82)
+      number: 81
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*" # Istio Gateway requires "*" or FQDN (short names like "localhost" are rejected)
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: learning-vs
+  namespace: learning
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - learning-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /oauth2
+    route:
+    - destination:
+        host: oauth2-proxy
+        port:
+          number: 4180
+      headers:
+        request:
+          set:
+            Host: "localhost:81"
+  - match:
+    - uri:
+        prefix: /auth
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+      headers:
+        request:
+          set:
+            Host: "localhost:81"
+  - match:
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: svc-api
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: svc-ui
+        port:
+          number: 30123

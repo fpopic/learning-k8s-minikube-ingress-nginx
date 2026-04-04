@@ -10,7 +10,8 @@ spec:
     app: ui
   ports:
     - protocol: TCP
+      # Container port named in deployment
       targetPort: ui-port
+      # Service port for internal cluster access
       port: 80
-      nodePort: 30123
   type: NodePort

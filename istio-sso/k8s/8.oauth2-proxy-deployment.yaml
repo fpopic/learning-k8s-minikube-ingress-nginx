@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-proxy
+  namespace: learning
+  labels:
+    app: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app: oauth2-proxy
+    spec:
+      containers:
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
+        args:
+        - --provider=oidc
+        - --provider-display-name="Keycloak"
+        - --email-domain=*
+        - --upstream=static://200
+        - --http-address=0.0.0.0:4180
+        - --oidc-issuer-url=http://keycloak.learning.svc.cluster.local:8080/auth/realms/master
+        - --insecure-oidc-skip-issuer-verification=true
+        - --insecure-oidc-allow-unverified-email=true
+        - --client-id=oauth2-proxy
+        - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
+        - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
+        - --cookie-secure=false
+        - --redirect-url=http://localhost:81/oauth2/callback
+        - --whitelist-domain=localhost:81
+        - --cookie-domain=localhost
+        - --pass-user-headers=true
+        - --set-xauthrequest=true
+        env:
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: sso-secrets
+              key: OAUTH2_PROXY_CLIENT_SECRET
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: sso-secrets
+              key: OAUTH2_PROXY_COOKIE_SECRET
+        ports:
+        - name: http
+          # Default oauth2-proxy port
+          containerPort: 4180

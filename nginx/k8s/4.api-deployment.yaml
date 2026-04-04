@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: learning-nginx
+spec:
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api-container
+          image: hello-api:latest
+          # Colima uses the local Docker daemon, so the cluster can find the image.
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80

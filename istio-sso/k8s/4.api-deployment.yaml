@@ -15,7 +15,7 @@ spec:
       containers:
         - name: api-container
           image: hello-api:latest
-          # In Minikube, we usually build the image locally and don't push it.
+          # Colima uses the local Docker daemon, so the cluster can find the image.
           imagePullPolicy: Never
           ports:
             - containerPort: 80
