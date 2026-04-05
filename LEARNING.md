@@ -53,13 +53,28 @@ flowchart TD
     Proxy <-->|Intercepts| Code
 ```
 
-1.  **Request**: User hits Istio Gateway.
-2.  **Intercept**: Istio's `AuthorizationPolicy` sends a check request to `oauth2-proxy`.
-3.  **Validate**: `oauth2-proxy` checks for a session cookie. If missing, it redirects to the IDP (Keycloak).
-4.  **Inject**: Once validated, the proxy returns `200 OK` to Istio and tells it to inject HTTP headers:
-    - `X-Auth-Request-User`
-    - `X-Auth-Request-Email`
-5.  **Clean Code**: The FastAPI backend simply reads these headers. It doesn't even know it's behind OIDC.
+### Istio Configuration Flow
+While the diagram above shows physical nesting, this diagram shows how **Istio Namespace Objects** control the logical flow of traffic and security:
+
+```mermaid
+flowchart LR
+    subgraph Namespace ["Namespace: learning"]
+        direction TB
+        
+        GW[Gateway] -->|Attaches to| VS[VirtualService]
+        VS -->|Routes to| SVC[K8s Service]
+        
+        Policy[Authorization Policy] -.->|Enforces on| Workload[(Pod Workload)]
+        SVC --> Workload
+    end
+
+    User([User Browser]) -->|Port 81| GW
+    Proxy[Auth Proxy] <-->|External Auth Check| Policy
+```
+
+1.  **Gateway**: Defines the "Where" (e.g., port 81, localhost). It opens the hole in the mesh for external traffic.
+2.  **VirtualService**: Defines the "How" (the routing logic). It maps paths like `/api` or `/auth` to specific internal Kubernetes services.
+3.  **AuthorizationPolicy**: Defines the "Who" (security). In this project, it tells the Gateway to stop every request and ask `oauth2-proxy` if the user is allowed in.
 
 ## 3. Key Technical Lessons
 
