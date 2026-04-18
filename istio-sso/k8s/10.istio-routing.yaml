@@ -8,7 +8,7 @@ spec:
     istio: ingressgateway # standard for istioctl demo profile
   servers:
   - port:
-      # Port 81 is used to avoid conflict with standard HTTP (80) and Nginx Ingress (82)
+      # Port 81 is defined for external access (avoiding conflict with standard HTTP 80)
       number: 81
       name: http
       protocol: HTTP
@@ -33,6 +33,7 @@ spec:
     - destination:
         host: oauth2-proxy
         port:
+          # Reference to service port 4180 defined in oauth2-proxy-service.yaml
           number: 4180
       headers:
         request:
@@ -45,6 +46,7 @@ spec:
     - destination:
         host: keycloak
         port:
+          # Reference to service port 8080 defined in keycloak-service.yaml
           number: 8080
       headers:
         request:
@@ -57,6 +59,7 @@ spec:
     - destination:
         host: svc-api
         port:
+          # Reference to service port 80 defined in api-service.yaml
           number: 80
   - match:
     - uri:
@@ -65,4 +68,5 @@ spec:
     - destination:
         host: svc-ui
         port:
+          # Reference to service port 80 defined in ui-service.yaml
           number: 80

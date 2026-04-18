@@ -8,7 +8,7 @@ spec:
     app: oauth2-proxy
   ports:
   - name: http
-    # Service port for internal cluster access
+    # Service port defined for internal cluster access
     port: 4180
-    # Port oauth2-proxy is listening on in the container
+    # Reference to oauth2-proxy container port 4180
     targetPort: 4180

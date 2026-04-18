@@ -8,7 +8,7 @@ spec:
     app: keycloak
   ports:
   - name: http
-    # Service port for internal cluster access
+    # Service port defined for internal cluster access
     port: 8080
-    # Port Keycloak is listening on in the container
+    # Reference to Keycloak container port 8080
     targetPort: 8080

@@ -42,5 +42,5 @@ spec:
           value: "/auth"
         ports:
         - name: http
-          # Default Keycloak HTTP port
+          # Port where the Keycloak container listens
           containerPort: 8080

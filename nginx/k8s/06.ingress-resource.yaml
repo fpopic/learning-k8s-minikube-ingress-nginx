@@ -16,7 +16,7 @@ spec:
               service:
                 name: svc-api
                 port:
-                  # Match service port defined in 05.api-service.yaml
+                  # Reference to service port 80 defined in 05.api-service.yaml
                   number: 80
           - path: /
             pathType: Prefix
@@ -24,5 +24,5 @@ spec:
               service:
                 name: svc-ui
                 port:
-                  # Match service port defined in 03.ui-service.yaml
+                  # Reference to service port 80 defined in 03.ui-service.yaml
                   number: 80

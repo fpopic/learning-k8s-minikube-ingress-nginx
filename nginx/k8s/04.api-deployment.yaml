@@ -18,4 +18,5 @@ spec:
           # Colima uses the local Docker daemon, so the cluster can find the image.
           imagePullPolicy: Never
           ports:
+            # Port where the API container listens (FastAPI)
             - containerPort: 80

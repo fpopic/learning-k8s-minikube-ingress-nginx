@@ -23,4 +23,5 @@ spec:
           ports:
             # Standard Nginx HTTP port
             - name: ui-port
+              # Port where the UI container listens (Nginx)
               containerPort: 80

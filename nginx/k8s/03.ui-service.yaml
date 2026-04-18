@@ -10,6 +10,8 @@ spec:
     app: ui
   ports:
     - protocol: TCP
+      # Reference to 'ui-port' name defined in deployment
       targetPort: ui-port
+      # Service port defined for internal cluster access
       port: 80
   type: ClusterIP

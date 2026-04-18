@@ -22,4 +22,5 @@ spec:
           ports:
             # https://stackoverflow.com/a/65270688/2122990
             - name: ui-port
+              # Port where the UI container listens (Nginx)
               containerPort: 80

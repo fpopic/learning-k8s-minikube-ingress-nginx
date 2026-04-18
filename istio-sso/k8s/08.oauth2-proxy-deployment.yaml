@@ -49,5 +49,5 @@ spec:
               key: OAUTH2_PROXY_COOKIE_SECRET
         ports:
         - name: http
-          # Default oauth2-proxy port
+          # Port where the oauth2-proxy container listens
           containerPort: 4180
